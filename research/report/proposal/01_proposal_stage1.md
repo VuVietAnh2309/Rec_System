@@ -1,8 +1,8 @@
 # Proposal — Stage 1
 
-**Paper chọn:** *MiniRAG: Towards Extremely Simple Retrieval-Augmented Generation*
-Tianyu Fan, Jingyuan Wang, Xubin Ren, Chao Huang (HKU) — [arXiv:2501.06713](https://arxiv.org/abs/2501.06713), v1 **12/01/2025**
-Code: [HKUDS/MiniRAG](https://github.com/HKUDS/MiniRAG)
+**Paper chọn:** *MiniRAG: Towards Extremely Simple Retrieval-Augmented Generation*  
+Tianyu Fan, Jingyuan Wang, Xubin Ren, Chao Huang (HKU)  
+[arXiv:2501.06713](https://arxiv.org/abs/2501.06713) — v1 **12/01/2025** — Code: [HKUDS/MiniRAG](https://github.com/HKUDS/MiniRAG)
 
 **Tiêu đề đề tài đề xuất:**
 > *Lợi thế của MiniRAG đến từ truy xuất tốt hơn, hay từ việc nó ít chịu nói "không biết"?
@@ -10,7 +10,7 @@ Code: [HKUDS/MiniRAG](https://github.com/HKUDS/MiniRAG)
 
 ---
 
-## 1. Paper nói gì
+## 1. Tổng quan về paper MiniRAG
 
 Hầu hết hệ RAG hiện đại giả định phía sau là một LLM mạnh — dùng để rút trích thực thể, viết mô tả quan hệ,
 tóm tắt, và đọc hiểu ngữ cảnh dài. Khi thay bằng **Small Language Model (SLM, 1.5–4B)** để chạy trên thiết bị
@@ -29,7 +29,7 @@ MiniRAG đề xuất một pipeline được thiết kế để **không đòi h
 **Kết quả công bố:** hiệu quả cao hơn 1.3–2.5× trong khi chỉ tốn **25% dung lượng lưu trữ** so với LightRAG.
 Paper cũng đóng góp **LiHua-World**, benchmark mô phỏng kịch bản on-device (một năm tin nhắn của người dùng ảo LiHua).
 
-## 2. Vì sao chọn paper này
+## 2. Lý do chọn paper
 
 Chi tiết so sánh 9 ứng viên ở [`00_shortlist_papers.md`](./00_shortlist_papers.md). Ba lý do:
 
@@ -45,7 +45,7 @@ một paper mà em nắm chắc toàn bộ cơ chế thì mới phản biện đ
 
 **c) Có lỗ hổng thật để mổ xẻ.** Xem §3 — và đây mới là phần chính của đồ án.
 
-## 3. Quan sát khởi nguồn: lợi thế của MiniRAG có thể bị nhiễu
+## 3. Phân tích sơ bộ và nhận định vấn đề
 
 Đọc bảng kết quả MultiHop-RAG trong chính paper (`acc↑` / `err↓`, đơn vị %):
 
@@ -109,7 +109,7 @@ Khác biệt này quan trọng: một bên là kết luận khoa học, một b�
 **RQ5 — Tái lập ablation.** Paper có sẵn ba biến thể: `-I` (thay indexing đồ thị dị thể bằng indexing dựa mô tả),
 `-R_edge` (bỏ thông tin cạnh), `-R_chunk` (bỏ node chunk). Chạy lại và đối chiếu.
 
-## 5. Cải tiến đề xuất
+## 5. Đề xuất cải tiến
 
 Xuất phát trực tiếp từ RQ2, không phải ý tưởng thả từ trên trời:
 
@@ -148,7 +148,7 @@ và MiniCPM3-4B nếu còn thời gian. gpt-4o-mini làm mốc trần trong pape
 nó vẫn ra win-rate 90/10). Vì vậy đồ án **ưu tiên các chỉ số không cần giám khảo** (Recall@k theo `Evidence`, và
 khớp chuỗi với `Gold Answer` — phần lớn đáp án là Yes/No/tên riêng nên khớp được).
 
-## 7. Ngân sách compute
+## 7. Ước lượng tài nguyên tính toán
 
 Phần cứng: 1× RTX 5090 (32 GB, sm_120), 32 core, 123 GB RAM, 878 GB trống.
 Env sẵn có: `/data/anhvv/envs/mri5090` (torch 2.11.0+cu128, hỗ trợ sm_120).
@@ -169,7 +169,7 @@ Env sẵn có: `/data/anhvv/envs/mri5090` (torch 2.11.0+cu128, hỗ trợ sm_120
 Điểm đáng chú ý: **RQ2 và RQ3 — phần đóng góp chính — gần như không tốn GPU**, vì chúng phân tích lại log sinh ra
 từ RQ1. Nghĩa là rủi ro "hết thời gian máy" không đe doạ phần giá trị nhất của đồ án.
 
-## 8. Rủi ro và phương án dự phòng
+## 8. Phân tích rủi ro và phương án dự phòng
 
 | Rủi ro | Xử lý |
 |---|---|
@@ -179,7 +179,7 @@ từ RQ1. Nghĩa là rủi ro "hết thời gian máy" không đe doạ phần g
 | MultiHop-RAG tải/chuẩn bị mất thời gian | Cắt bỏ. LiHua-World một mình đã đủ cho RQ1–RQ5 |
 | Thiếu thời gian | Ưu tiên RQ1 → RQ2 → RQ3 → §5 → RQ5 → RQ4. Bốn mục đầu đã đủ thành bài nộp hoàn chỉnh |
 
-## 9. Timeline
+## 9. Kế hoạch thực hiện
 
 > Đang để 8 tuần làm giả định — **cần chỉnh lại theo hạn thật của Stage 1**.
 
@@ -194,7 +194,7 @@ từ RQ1. Nghĩa là rủi ro "hết thời gian máy" không đe doạ phần g
 | 7 | Đo chi phí, kiểm chứng con số "25% dung lượng" |
 | 8 | Viết báo cáo, dựng biểu đồ, slide |
 
-## 10. Sản phẩm bàn giao
+## 10. Sản phẩm dự kiến
 
 1. Báo cáo trình bày lại paper: động cơ (RAG cho SLM), cơ chế đồ thị dị thể, truy xuất theo topology, kết quả.
 2. Bảng tái lập đặt cạnh bảng gốc của paper.
@@ -204,7 +204,7 @@ từ RQ1. Nghĩa là rủi ro "hết thời gian máy" không đe doạ phần g
 6. Bảng chi phí đo thật.
 7. Code và script tái lập trong `rag_prj/source/`.
 
-## 11. Ba góc nhìn cho phần thảo luận
+## 11. Đánh giá đa chiều về paper
 
 - **Điểm mạnh:** vấn đề có thật và chưa được giải quyết (RAG cho SLM); thiết kế hợp với động cơ (đẩy gánh nặng từ
   năng lực sinh sang cấu trúc đồ thị); code sạch, dữ liệu mở, rẻ.
