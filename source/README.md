@@ -4,8 +4,8 @@ Clone shallow (`--depth 1`, `GIT_LFS_SKIP_SMUDGE=1`) ngày 2026-09-21. PDF tươ
 
 | Thư mục | Paper | PDF | Vai trò trong đề tài |
 |---|---|---|---|
-| `HippoRAG/` | HippoRAG 2, ICML 2025 ([2502.14802](https://arxiv.org/abs/2502.14802)) | `HippoRAG2_FromRAGtoMemory_ICML2025.pdf` | **Paper chính.** Repo cũng chứa HippoRAG v1 để so sánh |
-| `MiniRAG/` | MiniRAG ([2501.06713](https://arxiv.org/abs/2501.06713)) | `MiniRAG_SLM_2025.pdf` | **Phương án B** |
+| `HippoRAG/` | HippoRAG 2, ICML 2025 ([2502.14802](https://arxiv.org/abs/2502.14802)) | `HippoRAG2_FromRAGtoMemory_ICML2025.pdf` | Phương án B — repo cũng chứa HippoRAG v1 |
+| `MiniRAG/` | MiniRAG, arXiv 01/2025 ([2501.06713](https://arxiv.org/abs/2501.06713)) | `MiniRAG_SLM_2025.pdf` | **Paper chính (đã chốt)** |
 | `FlashRAG/` | FlashRAG, WWW 2025 ([2405.13576](https://arxiv.org/abs/2405.13576)) | `FlashRAG_WWW2025.pdf` | Khung chạy baseline + ablation |
 | `LightRAG/` | LightRAG, EMNLP 2025 ([2410.05779](https://arxiv.org/abs/2410.05779)) | `LightRAG_EMNLP2025.pdf` | Baseline đối chứng chi phí |
 | `Adaptive-RAG/` | Adaptive-RAG, NAACL 2024 ([2403.14403](https://arxiv.org/abs/2403.14403)) | `AdaptiveRAG_NAACL2024.pdf` | Baseline (chạy qua FlashRAG, repo gốc pin torch<2.0) |

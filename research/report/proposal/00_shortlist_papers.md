@@ -21,8 +21,8 @@ cứng, quan trọng hơn cả VRAM.
 
 | # | Paper | Venue / arXiv | Ý tưởng cốt lõi | Pin phụ thuộc trong repo | Chạy được trên 5090? | Verdict |
 |---|---|---|---|---|---|---|
-| 1 | **HippoRAG 2** — *From RAG to Memory* | ICML 2025 / [2502.14802](https://arxiv.org/abs/2502.14802) | KG mở + Personalized PageRank mô phỏng hippocampus; query→triple linking, triple filtering ("recognition memory") | `torch==2.5.1`, `vllm==0.6.6.post1` (optional extra) | **Có** — torch chỉ dùng cho embedder, gỡ pin dễ; LLM gọi qua HTTP OpenAI-compatible nên chạy vLLM ở env riêng | ⭐ **Đề xuất chính** |
-| 2 | **MiniRAG** | ACL 2026 / [2501.06713](https://arxiv.org/abs/2501.06713) | Đồ thị dị thể (chunk + entity) + retrieval theo topology, thiết kế riêng cho SLM | **Không pin torch** | **Có, dễ nhất** — model đích là Phi-3.5-mini / Qwen2.5-3B / GLM-Edge-1.5B | ⭐ Phương án B |
+| 1 | **HippoRAG 2** — *From RAG to Memory* | ICML 2025 / [2502.14802](https://arxiv.org/abs/2502.14802) | KG mở + Personalized PageRank mô phỏng hippocampus; query→triple linking, triple filtering ("recognition memory") | `torch==2.5.1`, `vllm==0.6.6.post1` (optional extra) | **Có** — torch chỉ dùng cho embedder, gỡ pin dễ; LLM gọi qua HTTP OpenAI-compatible nên chạy vLLM ở env riêng | Phương án B — ý tưởng mạnh hơn nhưng nặng và khó hiểu hơn nhiều |
+| 2 | **MiniRAG** | arXiv 01/2025 / [2501.06713](https://arxiv.org/abs/2501.06713) | Đồ thị dị thể (chunk + entity) + retrieval theo topology, thiết kế riêng cho SLM | **Không pin torch** | **Có, dễ nhất** — model đích là Phi-3.5-mini / Qwen2.5-3B / GLM-Edge-1.5B | ⭐ **Đã chốt — paper chính** |
 | 3 | **Adaptive-RAG** | NAACL 2024 / [2403.14403](https://arxiv.org/abs/2403.14403) | Classifier phân loại độ khó câu hỏi → route sang no-retrieval / 1-step / multi-step | `torch>=1.7,<2.0`, transformers pin theo git SHA | Repo gốc **không**; nhưng FlashRAG đã có sẵn method `adaptive` | Dùng làm baseline, không làm paper chính |
 | 4 | **Sufficient Context** | ICLR 2025 / [2411.06037](https://arxiv.org/abs/2411.06037) | Định nghĩa "đủ ngữ cảnh" thay cho "liên quan"; autorater + selective generation để model biết từ chối trả lời | — | Repo **chỉ có README + ảnh PNG, không có code** | ❌ Không đạt yêu cầu "chạy full thực nghiệm"; nhưng là **lăng kính phân tích rất tốt** để ghép vào paper chính |
 | 5 | **CRAG** — Corrective RAG | 2024 / [2401.15884](https://arxiv.org/abs/2401.15884) | Evaluator nhẹ chấm chất lượng retrieval → correct / incorrect / ambiguous, bù bằng web search | `torch==2.1.2`, `vllm==0.2.5`, `flash-attn==2.2.2` | **Không** (Blackwell). Còn phụ thuộc Google Search API tính phí | ❌ Loại |
@@ -33,7 +33,23 @@ cứng, quan trọng hơn cả VRAM.
 
 Bonus đã tải: [HippoRAG v1 (NeurIPS 2024)](https://arxiv.org/abs/2405.14831), [RAG vs GraphRAG (2025)](https://arxiv.org/abs/2502.11371).
 
-## Vì sao HippoRAG 2 đứng đầu
+## Quyết định cuối: chọn MiniRAG
+
+Ban đầu xếp HippoRAG 2 đứng đầu vì ý tưởng mạnh hơn. Đã đổi sang **MiniRAG** vì hai lý do:
+
+1. **Độ khó khái niệm.** HippoRAG 2 đòi hiểu Personalized PageRank (damping factor, reset probability vector,
+   synonym threshold) cộng với ánh xạ thần kinh học. MiniRAG chỉ có 2 loại node, 2 loại cạnh, cosine similarity
+   và đi đường trên đồ thị — phần method gần như toàn diễn giải bằng lời, không có đại số ma trận.
+   Với đồ án môn học, hiểu chắc toàn bộ cơ chế quan trọng hơn là chọn paper oách.
+2. **Ngân sách GPU.** ~10–15 giờ (MiniRAG) so với ~25–30 giờ (HippoRAG 2), và mỗi lần chạy dưới 1 giờ.
+
+Đổi lại, MiniRAG là paper yếu hơn — nhưng điều đó **có lợi** cho yêu cầu "nhìn từ tốt đến hạn chế" của thầy:
+benchmark do chính nhóm tác giả tạo, baseline LightRAG cũng của nhóm đó, metric chấm bằng LLM, và
+79% câu hỏi trong LiHua-World là single-hop dù bài toán đặt ra là suy luận đa bước. Có nhiều thứ để nói.
+
+Chi tiết ở [`01_proposal_stage1.md`](./01_proposal_stage1.md).
+
+## Phụ lục: vì sao ban đầu xếp HippoRAG 2 đứng đầu (đã đổi sang MiniRAG)
 
 1. **Ý tưởng có chiều sâu, không phải kỹ thuật vụn.** Ánh xạ KG ↔ hippocampal index, PPR ↔ pattern completion,
    triple filtering ↔ recognition memory. Có câu chuyện để trình bày, không chỉ là "thêm một module".
